@@ -3,8 +3,10 @@
 
 <p>Aplicativo para monitoramento de alunos, da turma de pilates, da professora cintia freitas, aonde esta consumido a api que fornece os dados que vem do app desktop  </p>
 
+<div align="center">
+<img width="200" heigth="200"  align="center" src="assets/preview.jpg"><Br> <Br>
+</div>
 
-<img width="200" heigth="200" align="center" src="assets/preview.jpg"><Br> <Br>
 
 
 
