@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import uuid from 'react-native-uuid';
 
+import { Keyboard } from 'react-native';
 import { Add, Button, Container, Input } from './styles';
 
 interface TodoInputProps {
@@ -23,7 +24,7 @@ export function InputFilter({setProducts}: TodoInputProps) {
       if(value && value?.length > 0){
         const c = JSON.parse(value)
 
-        const jsonValue = JSON.stringify([...c,{id:uuid.v4(),name:product}])
+        const jsonValue = JSON.stringify([{id:uuid.v4(),name:product},...c])
 
         await AsyncStorage.setItem('@product5',jsonValue)
         setProducts(JSON.parse(jsonValue))
@@ -33,6 +34,8 @@ export function InputFilter({setProducts}: TodoInputProps) {
         const jsonValue = JSON.stringify([{id:uuid.v4(),name:product}])
         await AsyncStorage.setItem('@product5',jsonValue)
       }
+
+      Keyboard.dismiss()
       
     } catch (e) {
       // saving error
@@ -48,6 +51,7 @@ export function InputFilter({setProducts}: TodoInputProps) {
         selectionColor="#666666"
         value={product}
         onChangeText={setProduct}
+        onSubmitEditing={handleAddNewTask}
       />
       <Button
         testID="add-new-task-button"

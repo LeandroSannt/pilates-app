@@ -33,5 +33,29 @@ ${(props) => props.checked &&
   `
 }
 
-
 `
+
+interface ContainerIconsProps{
+  hasEditable:boolean
+}
+
+export const ContainerIcons = styled.View<ContainerIconsProps>`
+  width: 80px;
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+ 
+`
+
+export const InputEdit = styled.TextInput`
+  flex: 1;
+  border-radius: 4px;
+  background-color: #Fff;
+  padding: 8px;
+  color: #6E6E6E;
+  border: solid 1px rgba(110, 110, 110,0.4);
+`
+
