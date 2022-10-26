@@ -1,73 +1,64 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import uuid from 'react-native-uuid';
+
+import { Add, Button, Container, Input } from './styles';
 
 interface TodoInputProps {
-  searchStudent: (student: string) => void;
+  setProducts(value:any):void
 }
 
-export function InputFilter({ searchStudent }: TodoInputProps) {
-  const [student, setStudent] = useState('');
+export function InputFilter({setProducts}: TodoInputProps) {
+  const [product, setProduct] = useState('');
 
-  function handleAddNewTask() {
-    console.log(student)
 
-    searchStudent(student);
-    setStudent('');
+ async function handleAddNewTask() {
+    try {
+      const value = await AsyncStorage.getItem('@product5')
+
+      if(!product){
+        return
+      }
+
+      if(value && value?.length > 0){
+        const c = JSON.parse(value)
+
+        const jsonValue = JSON.stringify([...c,{id:uuid.v4(),name:product}])
+
+        await AsyncStorage.setItem('@product5',jsonValue)
+        setProducts(JSON.parse(jsonValue))
+        setProduct('')
+
+      }else{
+        const jsonValue = JSON.stringify([{id:uuid.v4(),name:product}])
+        await AsyncStorage.setItem('@product5',jsonValue)
+      }
+      
+    } catch (e) {
+      // saving error
+    }
   }
 
   return (
-    <View style={styles.inputContainer}>
-      <TextInput 
-        style={styles.input} 
-        placeholder="Pesquisar aluno"
+    <Container>
+      <Input 
+        placeholder="Novo item da lista"
         placeholderTextColor="#B2B2B2"
         returnKeyType="send"
         selectionColor="#666666"
-        value={student}
-        onChangeText={setStudent}
-        onSubmitEditing={handleAddNewTask}
+        value={product}
+        onChangeText={setProduct}
       />
-      <TouchableOpacity
+      <Button
         testID="add-new-task-button"
         activeOpacity={0.7}
-        style={styles.addButton}
         onPress={handleAddNewTask}
       >
-        <Icon name="chevron-right" size={24} color="#B2B2B2" />
-      </TouchableOpacity>
-    </View>
+        <Add>
+          +
+        </Add>
+      </Button>
+    </Container>
   )
 }
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    backgroundColor: '#FFF',
-    borderRadius: 5,
-    marginTop: -28,
-    marginBottom:20,
-    marginHorizontal: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  input: {
-    flex: 1,
-    height: 56,
-    paddingHorizontal: 20,
-    backgroundColor: '#FFF',
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-    borderRightWidth: 1,
-    borderRightColor: '#EBEBEB',
-    color: '#666666'
-  },
-  addButton: {
-    backgroundColor: '#FFF',
-    height: 56,
-    paddingHorizontal: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-  },
-});

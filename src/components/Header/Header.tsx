@@ -1,25 +1,22 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
 
-import { Container, H1, H3, P, Span } from './styles';
-
+import { Container, H1, Span } from './styles';
 
 interface HeaderProps {
-  studentsCounter: number;
+  totalProducts: number;
+  checkedTotalProducts:number
 }
 
-export function Header({ studentsCounter }: HeaderProps) {
+export function Header({ checkedTotalProducts,totalProducts }: HeaderProps) {
+
   
   return (
-    <Container>
-      <H1>Pilates</H1>
-      <H3 >
-        <P>
-          você tem:    
-        </P>
-        <Span>
-          {studentsCounter} alunos
-        </Span>
-      </H3>
+    <Container heightStatus={StatusBar.currentHeight?.toFixed(0)}>
+      <H1>Lista de compras</H1>
+      <Span>
+        {checkedTotalProducts}/{totalProducts}
+      </Span>
     </Container>
   )
 }

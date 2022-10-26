@@ -1,9 +1,13 @@
 import styled from 'styled-components/native'
 
-export const Container = styled.View`
-  background-color: #1fcab3;
+interface heightStatus{
+  heightStatus?:number
+}
+
+export const Container = styled.View<heightStatus>`
+  background-color: #2980B9;
   height: 140px;
-  padding: 50px 16px;
+  padding: ${(props) => props.heightStatus}px 16px 0 16px;
 
   display: flex;
   flex-direction: row;
@@ -13,8 +17,7 @@ export const Container = styled.View`
 `
 
 export const H1 = styled.Text`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 20px;
   color: #fff;
 `
 
@@ -23,14 +26,11 @@ export const H3 = styled.Text`
   color: #fff;
 
   display: flex;
-  gap: 10px;
 `
 
 export const Span = styled.Text`
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
+
 `
 
-export const P = styled.Text`
-  margin-right: 5px;
-`

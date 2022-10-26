@@ -1,53 +1,63 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { FlatList, View } from "react-native";
+import { Platform } from 'react-native';
 
 import { Header } from '../../components/Header/Header';
 import { InputFilter } from '../../components/Input';
-import Student from '../../components/Student';
-import { StudentProps } from '../../interfaces/students';
-import { api } from '../../services/api';
-import { Title } from './styles';
+import Product from '../../components/Product';
+import { ProductProps } from '../../interfaces/Product';
+import { BlankMessage, Container, ListProducts } from './styles';
 
-const List:React.FC = ({navigation}:any) =>{
-  const [students,setStudents] = useState<StudentProps[]>([])
+const List:React.FC = () =>{
+  const [products,setProducts] = useState<ProductProps[]>([])
+  const [productId, setProductId] = useState<string[]>([]);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@product5')
+
+      return jsonValue != null ? setProducts(JSON.parse(jsonValue)) : null;
+    } catch(e) {
+      // error reading value
+    }
+  }
+
   useEffect(() =>{
-     api.get('students')
-    .then((response) =>{
-      setStudents(response.data)
-    }).catch((err) =>{
-      console.log(err)
-    })
+    getData()
   },[])
 
   const renderItem = (props: any) => {
     return(
-      <Student key={props.item.id} name={props.item.name} />
+      <Product 
+        key={props.item.id}
+        setProductId={setProductId}
+        setProducts={setProducts}
+        productId={productId} 
+        id={props.item.id} 
+        name={props.item.name}
+      />
     )
-  }
-
-  const searchStudent = (studenthandled:string) =>{
-    const lowerBusca = studenthandled.toLowerCase()
-    const filtro =  students.filter((student)=>{  
-        return student.name.toLowerCase().includes(lowerBusca) 
-    })
-    setStudents(filtro)
   }
 
   return(
     <>
-    <Header studentsCounter={students.length}/>
-    <InputFilter searchStudent={searchStudent}/>
-    <View style={{padding:20}}> 
-      <Title>
-        Alunos
-      </Title>
-
-      <FlatList
-        data={students}
+    <Header checkedTotalProducts={productId.length} totalProducts={products.length}/>
+    <Container 
+      behavior={Platform.OS === 'ios' ? "padding" : "height"}
+     > 
+      {!!products.length  ?  
+      <>
+        <ListProducts
+        data={products}
         renderItem={renderItem}
-        keyExtractor={item => item?.id.toString()}
-      />
-  </View>
+        keyExtractor={(item: { id: { toString: () => any; }; }) => item?.id.toString()}
+        />
+      </>
+      :
+       <BlankMessage>Nenhum item na lista</BlankMessage>
+      }
+      <InputFilter setProducts ={setProducts} />
+    </Container>
   </>
   )
 }
